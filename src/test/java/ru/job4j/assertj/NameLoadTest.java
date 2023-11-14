@@ -13,6 +13,14 @@ class NameLoadTest {
     }
 
     @Test
+    void checkMissingInput() {
+        NameLoad nameLoad = new NameLoad();
+        assertThatThrownBy(nameLoad::parse)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("array is empty");
+    }
+
+    @Test
     void checkMissingSeparator() {
         NameLoad nameLoad = new NameLoad();
         var input = "keyvalue";
