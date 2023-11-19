@@ -18,24 +18,26 @@ public class SimpleArrayList<T> implements SimpleList<T> {
     public void add(T value) {
         modCount++;
         if (size == container.length) {
-            container = Arrays.copyOf(container,
-                    container.length > 0 ? container.length * GROW_FACTOR : 1);
+            grow();
         }
         container[size++] = value;
     }
 
+    private void grow() {
+        container = Arrays.copyOf(container,
+                container.length > 0 ? container.length * GROW_FACTOR : 1);
+    }
+
     @Override
     public T set(int index, T newValue) {
-        Objects.checkIndex(index, size);
-        T oldValue = container[index];
+        T oldValue = get(index);
         container[index] = newValue;
         return oldValue;
     }
 
     @Override
     public T remove(int index) {
-        Objects.checkIndex(index, size);
-        T oldValue = container[index];
+        T oldValue = get(index);
         modCount++;
         System.arraycopy(container, index + 1, container, index, size - index - 1);
         container[size - 1] = null;
@@ -56,29 +58,24 @@ public class SimpleArrayList<T> implements SimpleList<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
+        return new Iterator<>() {
             int cursor;
             final int expectedModCount = modCount;
 
             @Override
             public boolean hasNext() {
-                checkForComodification();
+                if (modCount != expectedModCount) {
+                    throw new ConcurrentModificationException();
+                }
                 return cursor < size;
             }
 
             @Override
             public T next() {
-                checkForComodification();
-                if (cursor >= size) {
+                if (!hasNext()) {
                     throw new NoSuchElementException();
                 }
                 return container[cursor++];
-            }
-
-            void checkForComodification() {
-                if (modCount != expectedModCount) {
-                    throw new ConcurrentModificationException();
-                }
             }
         };
     }
