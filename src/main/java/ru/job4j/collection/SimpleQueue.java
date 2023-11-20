@@ -9,23 +9,19 @@ public class SimpleQueue<T> {
     private int outSize;
 
     public T poll() {
-        move();
-        if (outSize == 0) {
+        if (outSize == 0 && inSize == 0) {
             throw new NoSuchElementException("Queue is empty");
         }
-        var value = out.pop();
-        outSize--;
-        return value;
-    }
-
-    private void move() {
         if (outSize == 0) {
             for (int i = 0; i < inSize; i++) {
                 out.push(in.pop());
             }
-            outSize += inSize;
+            outSize = inSize;
             inSize = 0;
         }
+        var value = out.pop();
+        outSize--;
+        return value;
     }
 
     public void push(T value) {
