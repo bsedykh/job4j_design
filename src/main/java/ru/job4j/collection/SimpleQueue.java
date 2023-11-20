@@ -19,9 +19,8 @@ public class SimpleQueue<T> {
             outSize = inSize;
             inSize = 0;
         }
-        var value = out.pop();
         outSize--;
-        return value;
+        return out.pop();
     }
 
     public void push(T value) {
