@@ -9,17 +9,23 @@ public class SimpleLinkedList<E> implements SimpleLinked<E> {
     private int size;
     private int modCount;
     private Node<E> head;
-    private Node<E> tail;
+
+    private Node<E> getNode(int index) {
+        var node = head;
+        for (int i = 0; i < index; i++) {
+            node = node.next;
+        }
+        return node;
+    }
 
     @Override
     public void add(E value) {
         var node = new Node<>(value, null);
-        var prevTail = tail;
-        tail = node;
-        if (prevTail == null) {
+        if (head == null) {
             head = node;
         } else {
-            prevTail.next = node;
+            var tail = getNode(size - 1);
+            tail.next = node;
         }
         modCount++;
         size++;
@@ -28,11 +34,7 @@ public class SimpleLinkedList<E> implements SimpleLinked<E> {
     @Override
     public E get(int index) {
         Objects.checkIndex(index, size);
-        var node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
-        return node.item;
+        return getNode(index).item;
     }
 
     @Override
