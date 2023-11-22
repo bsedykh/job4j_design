@@ -26,7 +26,7 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
         var hashCode = Objects.hashCode(key);
         var index = indexFor(hashCode);
         if (table[index] == null) {
-            table[index] = new MapEntry<>(hashCode, key, value);
+            table[index] = new MapEntry<>(key, value);
             count++;
             modCount++;
             result = true;
@@ -49,7 +49,7 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
         capacity = newCapacity;
         for (var entry : table) {
             if (entry != null) {
-                var index = indexFor(entry.hashCode);
+                var index = indexFor(Objects.hashCode(entry.key));
                 newTable[index] = entry;
             }
         }
@@ -62,7 +62,7 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
         var index = indexFor(hashCode);
         var entry = table[index];
         if (entry != null
-                && entry.hashCode == hashCode && Objects.equals(entry.key, key)) {
+                && Objects.hashCode(entry.key) == hashCode && Objects.equals(entry.key, key)) {
             result = index;
         }
         return result;
@@ -113,14 +113,12 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
     }
 
     private static class MapEntry<K, V> {
-        int hashCode;
         K key;
         V value;
 
-        public MapEntry(int hashCode, K key, V value) {
+        public MapEntry(K key, V value) {
             this.key = key;
             this.value = value;
-            this.hashCode = hashCode;
         }
     }
 }
