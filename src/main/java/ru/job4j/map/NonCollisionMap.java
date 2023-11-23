@@ -19,19 +19,21 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        if (count + 1 > LOAD_FACTOR * capacity) {
+        if (count >= LOAD_FACTOR * capacity) {
             expand();
         }
-        var result = false;
-        var hashCode = Objects.hashCode(key);
-        var index = indexFor(hashCode);
-        if (table[index] == null) {
+        var index = indexFor(key);
+        var result = table[index] == null;
+        if (result) {
             table[index] = new MapEntry<>(key, value);
             count++;
             modCount++;
-            result = true;
         }
         return result;
+    }
+
+    private int indexFor(K key) {
+        return indexFor(Objects.hashCode(key));
     }
 
     private int hash(int hashCode) {
@@ -44,12 +46,11 @@ public class NonCollisionMap<K, V> implements SimpleMap<K, V> {
 
     @SuppressWarnings("unchecked")
     private void expand() {
-        var newCapacity = capacity * 2;
-        var newTable = new MapEntry[newCapacity];
-        capacity = newCapacity;
+        capacity *= 2;
+        var newTable = new MapEntry[capacity];
         for (var entry : table) {
             if (entry != null) {
-                var index = indexFor(Objects.hashCode(entry.key));
+                var index = indexFor(entry.key);
                 newTable[index] = entry;
             }
         }
