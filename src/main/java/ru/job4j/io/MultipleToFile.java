@@ -1,6 +1,7 @@
 package ru.job4j.io;
 
 import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class MultipleToFile {
     public static void main(String[] args) {
@@ -9,7 +10,7 @@ public class MultipleToFile {
                 out.write("1 * %d = %d".formatted(i, i).getBytes());
                 out.write(System.lineSeparator().getBytes());
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
