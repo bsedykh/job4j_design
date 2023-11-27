@@ -2,6 +2,7 @@ package ru.job4j.io;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,10 +21,10 @@ public class LogFilter {
                     .filter(line -> {
                         var attributes = line.split(" ");
                         return attributes.length >= 2
-                                && attributes[attributes.length - 2].equals("404");
+                                && "404".equals(attributes[attributes.length - 2]);
                     })
                     .collect(Collectors.toList());
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;
