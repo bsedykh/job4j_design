@@ -21,14 +21,7 @@ public class DuplicatesVisitor extends SimpleFileVisitor<Path> {
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         var key = new FileProperty(attrs.size(), file.getFileName().toString());
         var path = file.normalize().toAbsolutePath().toString();
-        var paths = duplicates.get(key);
-        if (paths == null) {
-            var list = new ArrayList<String>();
-            list.add(path);
-            duplicates.put(key, list);
-        } else {
-            paths.add(path);
-        }
+        duplicates.computeIfAbsent(key, k -> new ArrayList<>()).add(path);
         return super.visitFile(file, attrs);
     }
 }
