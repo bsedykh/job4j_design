@@ -16,6 +16,13 @@ public class Search {
         if (args.length < 2) {
             throw new IllegalArgumentException("Invalid args. Usage: <root path> <file extension>");
         }
+        if (!Files.isDirectory(Path.of(args[0]))) {
+            throw new IllegalArgumentException("Invalid args. The first argument must be a directory");
+        }
+        if (args[1].length() < 2 || !args[1].startsWith(".")) {
+            throw new IllegalArgumentException(
+                    "Invalid args. The second argument must contain at least two characters and start with '.'");
+        }
     }
 
     public static List<Path> search(Path root, Predicate<Path> condition) throws IOException {
