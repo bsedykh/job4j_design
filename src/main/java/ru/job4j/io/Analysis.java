@@ -5,14 +5,14 @@ import java.io.*;
 public class Analysis {
     public void unavailable(String source, String target) {
         try (BufferedReader read = new BufferedReader(new FileReader(source));
-             PrintWriter write = new PrintWriter(new BufferedWriter(new FileWriter(target)))) {
+             BufferedWriter write = new BufferedWriter(new FileWriter(target))) {
             String start = null;
             for (String line = read.readLine(); line != null; line = read.readLine()) {
                 String[] entry = line.split(" ");
                 if (start == null && isError(entry[0])) {
                     start = entry[1];
                 } else if (start != null && !isError(entry[0])) {
-                    write.println(start + ";" + entry[1]);
+                    write.append(start).append(';').append(entry[1]).append('\n');
                     start = null;
                 }
             }
