@@ -22,17 +22,17 @@ public class ArgsName {
             throw new IllegalArgumentException("Arguments not passed to program");
         }
         for (var arg : args) {
-            if (!arg.startsWith("-")) {
-                throw new IllegalArgumentException(
-                        "Error: This argument '%s' does not start with a '-' character".formatted(arg));
-            }
-            var keyValue = arg.substring(1).split("=", 2);
-            validateKeyValue(keyValue, arg);
+            var keyValue = parseArg(arg);
             values.put(keyValue[0], keyValue[1]);
         }
     }
 
-    private void validateKeyValue(String[] keyValue, String arg) {
+    private String[] parseArg(String arg) {
+        if (!arg.startsWith("-")) {
+            throw new IllegalArgumentException(
+                    "Error: This argument '%s' does not start with a '-' character".formatted(arg));
+        }
+        var keyValue = arg.substring(1).split("=", 2);
         if (keyValue.length < 2) {
             throw new IllegalArgumentException(
                     "Error: This argument '%s' does not contain an equal sign".formatted(arg));
@@ -45,6 +45,7 @@ public class ArgsName {
             throw new IllegalArgumentException(
                     "Error: This argument '%s' does not contain a value".formatted(arg));
         }
+        return keyValue;
     }
 
     public static ArgsName of(String[] args) {

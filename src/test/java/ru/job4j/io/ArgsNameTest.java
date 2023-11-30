@@ -78,6 +78,14 @@ class ArgsNameTest {
     }
 
     @Test
+    void whenThereNoEqualSignThenExceptionThrown2() {
+        assertThatThrownBy(() -> ArgsName.of(new String[]{"-"}))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageMatching("^.+")
+                .hasMessageContaining("Error: This argument '-' does not contain an equal sign");
+    }
+
+    @Test
     void whenNoHyphenPrefixThenExceptionThrown() {
         assertThatThrownBy(() -> ArgsName.of(new String[]{"-Xmx=512", "request=?msg=Exit="}))
                 .isInstanceOf(IllegalArgumentException.class)
