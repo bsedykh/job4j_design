@@ -1,77 +1,51 @@
 package ru.job4j.io;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 public class CSVReader {
-    private record Args(Path source, Path target, String delimiter, List<String> columns) {
+    private static final Charset ENCODING = StandardCharsets.UTF_8;
+
+    private record Args(Path source, Path target, String delimiter, String[] columns) {
     }
 
     public static void handle(ArgsName argsName) throws IOException {
         var args = parseArgs(argsName);
-        var indexes = getIndexes(args.source, args.delimiter, args.columns);
-        try (var reader = Files.newBufferedReader(args.source, StandardCharsets.UTF_8);
-             var writer = getWriter(args.target)) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                var in = new Scanner(line).useDelimiter(args.delimiter);
-                var pos = 0;
-                var values = new String[indexes.size()];
-                while (in.hasNext()) {
-                    var value = in.next();
-                    var index = indexes.get(pos);
-                    if (index != null) {
-                        values[index] = value;
-                    }
-                    pos++;
+        var result = new ArrayList<String>();
+        result.add(String.join(args.delimiter, args.columns));
+        try (var scanner = new Scanner(args.source, ENCODING)) {
+            var sourceColumns = scanner.nextLine().split(args.delimiter);
+            var indexes = getIndexes(sourceColumns, args.columns);
+            while (scanner.hasNextLine()) {
+                var joiner = new StringJoiner(args.delimiter);
+                var values = scanner.nextLine().split(args.delimiter);
+                for (var index : indexes) {
+                    joiner.add(values[index]);
                 }
-                writer.write(String.join(args.delimiter, values)
-                        .concat(System.lineSeparator()));
+                result.add(joiner.toString());
             }
         }
-    }
-
-    private static Map<Integer, Integer> getIndexes(Path source,
-                                            String delimiter,
-                                            List<String> columns) throws IOException {
-        Map<Integer, Integer> indexes = Collections.emptyMap();
-        try (var lines = Files.lines(source, StandardCharsets.UTF_8)) {
-            var line = lines.findFirst();
-            if (line.isPresent()) {
-                indexes = getIndexes(line.get(), delimiter, columns);
-            }
-        }
-        return indexes;
-    }
-
-    private static Map<Integer, Integer> getIndexes(String source,
-                                            String delimiter,
-                                            List<String> columns) {
-        var indexes = new HashMap<Integer, Integer>();
-        var in = new Scanner(source).useDelimiter(delimiter);
-        var pos = 0;
-        while (in.hasNext()) {
-            var column = in.next();
-            var index = columns.indexOf(column);
-            if (index != -1) {
-                indexes.put(pos, index);
-            }
-            pos++;
-        }
-        return indexes;
-    }
-
-    private static Writer getWriter(Path target) throws IOException {
-        Writer writer;
-        if ("stdout".equals(target.toString())) {
-            writer = new BufferedWriter(new OutputStreamWriter(System.out, StandardCharsets.UTF_8));
+        if ("stdout".equals(args.target.toString())) {
+            result.forEach(System.out::println);
         } else {
-            writer = Files.newBufferedWriter(target, StandardCharsets.UTF_8);
+            Files.write(args.target, result, ENCODING);
         }
-        return writer;
+    }
+
+    private static int[] getIndexes(String[] sourceColumns, String[] targetColumns) {
+        var indexes = new int[targetColumns.length];
+        for (int i = 0; i < targetColumns.length; i++) {
+            for (int j = 0; j < sourceColumns.length; j++) {
+                if (targetColumns[i].equals(sourceColumns[j])) {
+                    indexes[i] = j;
+                }
+            }
+        }
+        return indexes;
     }
 
     private static Args parseArgs(ArgsName argsName) {
@@ -86,7 +60,7 @@ public class CSVReader {
         }
         var target = Path.of(argsName.get("out"));
         var delimiter = argsName.get("delimiter");
-        var columns = List.of(argsName.get("filter").split(","));
+        var columns = argsName.get("filter").split(",");
         return new Args(source, target, delimiter, columns);
     }
 
