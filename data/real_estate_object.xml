@@ -1,0 +1,16 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+<RealEstateObject>
+    <name>Здание</name>
+    <area>200.0</area>
+    <address>
+        <region>Калужская обл</region>
+        <city>Калуга</city>
+        <street>Ленина</street>
+        <number>2</number>
+    </address>
+    <hasElectricity>true</hasElectricity>
+    <statuses>
+        <status>Объект культурного наследия</status>
+        <status>Требуется капитальный ремонт</status>
+    </statuses>
+</RealEstateObject>
