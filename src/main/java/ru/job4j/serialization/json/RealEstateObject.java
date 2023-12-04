@@ -18,6 +18,26 @@ public class RealEstateObject {
         this.statuses = statuses;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public double getArea() {
+        return area;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public boolean hasElectricity() {
+        return hasElectricity;
+    }
+
+    public String[] getStatuses() {
+        return statuses;
+    }
+
     @Override
     public String toString() {
         return "RealEstateObject{"
