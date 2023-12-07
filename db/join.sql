@@ -49,4 +49,4 @@ insert into teens(name, gender) values('Katya', 'female');
 insert into teens(name, gender) values('Olya', 'female');
 
 select * from teens t1, teens t2
-where t1.gender <> t2.gender;
+where t1.gender = 'male' and t1.gender <> t2.gender;
