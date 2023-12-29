@@ -28,11 +28,4 @@ public class Post {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    /*остальные getter/setter*/
-
-    @Override
-    protected void finalize() throws Throwable {
-        super.finalize();
-    }
 }
