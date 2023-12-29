@@ -18,6 +18,8 @@
     <!--   <property name="fileExtensions" value="java"/> -->
     <!-- </module> -->
 
+    <module name="NewlineAtEndOfFile"/>
+
     <module name="TreeWalker">
 
         <!-- Checks for Naming Conventions.                  -->
