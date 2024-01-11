@@ -22,6 +22,8 @@ class XMLReportPrinterTest {
         Calendar now = Calendar.getInstance();
         Employee worker = new Employee("Ivan", now, now, 100);
         store.add(worker);
+        Employee anotherWorker = new Employee("Vasiliy", now, now, 200);
+        store.add(anotherWorker);
         ReportPrinter printer = new XMLReportPrinter();
         Report engine = new ReportEngine(store, printer);
         String expected = """
@@ -33,12 +35,24 @@ class XMLReportPrinterTest {
                         <fired>%s</fired>
                         <salary>%s</salary>
                     </employee>
+                    <employee>
+                        <name>%s</name>
+                        <hired>%s</hired>
+                        <fired>%s</fired>
+                        <salary>%s</salary>
+                    </employee>
                 </employees>
                 """
-                .formatted(worker.getName(),
+                .formatted(
+                        worker.getName(),
                         dateTimeParser.parse(worker.getHired()),
                         dateTimeParser.parse(worker.getFired()),
-                        worker.getSalary());
+                        worker.getSalary(),
+                        anotherWorker.getName(),
+                        dateTimeParser.parse(anotherWorker.getHired()),
+                        dateTimeParser.parse(anotherWorker.getFired()),
+                        anotherWorker.getSalary()
+                );
         assertThat(engine.generate(employee -> true)).isEqualTo(expected);
     }
 }
