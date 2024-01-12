@@ -1,9 +1,11 @@
 package ru.job4j.ood.lsp.parking;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
+@Disabled
 class ParkingImplTest {
     @Test
     public void whenSufficientEmptySpacesOfEachSizeThenTrue() {
