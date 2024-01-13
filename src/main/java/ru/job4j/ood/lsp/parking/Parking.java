@@ -5,7 +5,7 @@ import java.util.List;
 public interface Parking {
     boolean add(Car car);
 
-    void remove(Car car);
+    boolean remove(Car car);
 
     List<Car> getCars();
 }
