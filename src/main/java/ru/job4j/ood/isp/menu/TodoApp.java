@@ -8,6 +8,7 @@ public class TodoApp {
     public static void main(String[] args) {
         Menu menu = new SimpleMenu();
         var input = new Scanner(System.in);
+        var output = new ConsoleOutput();
         boolean run = true;
         String name, parentName;
         while (run) {
@@ -37,7 +38,7 @@ public class TodoApp {
                     break;
                 case 4:
                     MenuPrinter printer = new MenuPrinterImpl();
-                    printer.print(menu);
+                    printer.print(menu, output);
                     break;
                 default:
                     run = false;
