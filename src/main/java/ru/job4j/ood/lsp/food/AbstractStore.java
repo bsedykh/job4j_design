@@ -18,6 +18,13 @@ public abstract class AbstractStore implements Store {
     }
 
     @Override
+    public List<Food> unload() {
+        var result = new ArrayList<>(products);
+        products.clear();
+        return result;
+    }
+
+    @Override
     public List<Food> getProducts() {
         return List.copyOf(products);
     }

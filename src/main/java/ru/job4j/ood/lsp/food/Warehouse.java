@@ -1,10 +1,14 @@
 package ru.job4j.ood.lsp.food;
 
-import java.time.LocalDate;
-
 public class Warehouse extends AbstractStore {
+    private final DateProvider dateProvider;
+
+    public Warehouse(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
+    }
+
     @Override
     protected boolean process(Food product) {
-        return product.getExpiryPercentage(LocalDate.now()) < 25;
+        return product.getExpiryPercentage(dateProvider.now()) < 25;
     }
 }

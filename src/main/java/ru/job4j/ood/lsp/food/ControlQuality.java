@@ -9,11 +9,18 @@ public class ControlQuality {
         this.stores = stores;
     }
 
-    public void process(Food product) {
+    public void sort(Food product) {
         for (var store : stores) {
             if (store.put(product)) {
                 break;
             }
         }
+    }
+
+    public void resort() {
+        var products = stores.stream()
+                .flatMap(store -> store.unload().stream())
+                .toList();
+        products.forEach(this::sort);
     }
 }

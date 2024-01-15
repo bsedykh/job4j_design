@@ -4,5 +4,6 @@ import java.util.List;
 
 public interface Store {
     boolean put(Food product);
+    List<Food> unload();
     List<Food> getProducts();
 }

@@ -7,10 +7,12 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.*;
 
 class TrashTest {
+    private final MockDateProvider dateProvider = new MockDateProvider();
+    private final LocalDate now = dateProvider.now();
+
     @Test
     public void whenExpiredProductThenTrashContainsProduct() {
-        Store store = new Trash();
-        var now = LocalDate.now();
+        Store store = new Trash(dateProvider);
         Food product = new Banana("Banana",
                 now.minusDays(10),
                 now,
@@ -23,8 +25,7 @@ class TrashTest {
 
     @Test
     public void whenFreshProductThenTrashIsEmpty() {
-        Store store = new Trash();
-        var now = LocalDate.now();
+        Store store = new Trash(dateProvider);
         Food product = new Banana("Banana",
                 now,
                 now.plusDays(10),
